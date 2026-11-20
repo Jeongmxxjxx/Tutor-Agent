@@ -1,0 +1,6 @@
+# LLM SDK (Chat Completions / Audio Transcriptions / Audio Speech)
+openai==1.58.1
+# .env 환경변수 로드
+python-dotenv==1.0.1
+# 웹 화면
+streamlit==1.67.0
