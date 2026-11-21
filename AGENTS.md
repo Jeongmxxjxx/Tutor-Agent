@@ -75,3 +75,28 @@ modules/
   docs: README 설치 방법 보완
   ```
 - `main` 브랜치에 직접 커밋하지 않고 기능별 브랜치에서 작업한다.
+
+## 모듈 구현 시 반드시 지킬 것
+
+담당 모듈(`modules/*.py`)을 구현할 때 아래 규칙을 지킨다.
+
+- **오류 처리**: 실패하면 예외를 그대로 `raise`한다. 사용자에게 보여줄 문구가 있으면 `raise ValueError("문구")`로 던진다. `except`로 잡아서 오류 문구를 `return`하지 않는다. 반환값은 그대로 화면에 답변으로 표시되고, 예외만 `modules/client.py`의 `describe_error()`가 오류 메시지로 바꿔 준다.
+- **수정 범위**: `app.py`는 수정하지 않는다. 담당 파일만 수정하고, `prompts.py`는 담당 모듈의 프롬프트 변수만 수정한다.
+- **클라이언트·모델**: `OpenAI()`를 새로 만들지 않고 `from modules.client import get_client, MODELS`로 가져와 쓴다. 모델 ID를 코드에 직접 쓰지 않고 `MODELS["chat"]`, `MODELS["vision"]`, `MODELS["stt"]`를 쓴다.
+- **API**: 텍스트·이미지는 Chat Completions API(`client.chat.completions.create`)만 사용한다. STT만 Audio Transcriptions API를 사용한다.
+- **프롬프트**: 모듈 안에 프롬프트를 새로 작성하지 않고 `prompts.py`에 있는 변수를 import해서 쓴다. 단, 모듈 안의 짧은 지시문은 예외로 허용한다.
+- **패키지**: 새 패키지를 쓰면 `requirements.txt`에 버전과 함께 추가한다.
+
+## app.py 연결 규칙
+
+`app.py`는 아래 이름의 함수를 자동으로 찾아 호출한다. 함수 이름·인자 순서·반환 형태를 그대로 지키면 `app.py`를 수정하지 않아도 연결된다.
+
+| 파일 | 함수 | 인자 | 반환 |
+|---|---|---|---|
+| `modules/stt.py` | `transcribe(audio, audio_name)` | `audio: bytes` 녹음 파일, `audio_name: str` 파일명 (예: `"recording.wav"`) | 인식한 텍스트 `str` |
+| `modules/vision.py` | `extract_problem(image, image_mime)` | `image: bytes` 이미지 파일, `image_mime: str` MIME 타입 (예: `"image/png"`) | 추출한 문제 텍스트 `str` |
+| `modules/llm.py` | `chat(history, stage)` | `history: list[dict]` `{"role", "content"}` 대화 기록, `stage: str` 답변 단계 | 튜터 답변 `str` |
+| `modules/quiz.py` | `generate_quiz(problem)` | `problem: str` 현재 문제 텍스트 | 유사 퀴즈 텍스트 `str` (마크다운) |
+
+- 반환값은 빈 문자열이나 `None`이 아니어야 한다. 실패하면 위 오류 처리 규칙대로 예외를 던진다.
+- `stage` 값은 `"hint"`(힌트), `"approach"`(풀이 방향), `"solution"`(전체 풀이와 정답), `"followup"`(이어지는 질문) 중 하나다.
