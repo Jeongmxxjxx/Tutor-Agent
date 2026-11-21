@@ -22,11 +22,7 @@ MODELS: dict[str, str] = {
     "vision": os.getenv("OPENAI_VISION_MODEL", "gpt-4o"),
     "chat": os.getenv("OPENAI_CHAT_MODEL", "gpt-4o-mini"),
     "stt": os.getenv("OPENAI_STT_MODEL", "whisper-1"),
-    "tts": os.getenv("OPENAI_TTS_MODEL", "tts-1"),
 }
-
-# TTS 목소리: alloy, ash, coral, echo, fable, onyx, nova, sage, shimmer
-TTS_VOICE: str = os.getenv("OPENAI_TTS_VOICE", "alloy")
 
 REQUEST_TIMEOUT_SEC = 60
 MAX_RETRIES = 2

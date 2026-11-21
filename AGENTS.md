@@ -25,7 +25,6 @@
 - 모든 기능 모듈은 공통 클라이언트를 사용한다
 - 텍스트 및 이미지 분석은 Chat Completions API를 사용한다
 - STT는 Audio Transcriptions API를 사용한다
-- TTS는 Audio Speech API를 사용한다
 - 모델 ID는 설정 파일에서 관리한다
 - API 키를 소스 코드에 직접 작성하지 않는다
 
@@ -39,7 +38,6 @@ modules/
   llm.py        # 질문·답변 생성
   vision.py     # 이미지 글자·수식 추출
   stt.py        # STT
-  tts.py        # TTS
   quiz.py       # 유사 퀴즈 생성
 ```
 

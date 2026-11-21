@@ -49,7 +49,6 @@ tutor_agent/
     ├── llm.py            # 질문·답변 생성
     ├── vision.py         # 이미지 분석
     ├── stt.py            # 음성 인식
-    ├── tts.py            # 음성 출력
     └── quiz.py           # 유사 퀴즈 생성
 ```
 
